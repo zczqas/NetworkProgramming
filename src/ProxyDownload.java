@@ -3,18 +3,25 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 
 public class ProxyDownload {
     public static void main(String[] args) {
         String webPageUrl = "http://www.example.com";  // Webpage URL to download
+        String proxyHost = "proxy.example.com";        // Proxy host
+        int proxyPort = 8080;                          // Proxy port
 
         try {
             // Create a URL object
             URL url = new URL(webPageUrl);
 
-            // Open a direct connection to the URL (without proxy)
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            // Create a proxy object
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+
+            // Open a connection to the URL using the proxy
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
 
             // Set request method (GET in this case)
             connection.setRequestMethod("GET");
@@ -35,7 +42,7 @@ public class ProxyDownload {
             reader.close();
             writer.close();
 
-            System.out.println("Web page downloaded successfully!");
+            System.out.println("Web page downloaded successfully through the proxy!");
 
         } catch (IOException e) {
             e.printStackTrace();
